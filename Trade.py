@@ -12,7 +12,7 @@ def OptimalContracts(bp, ask):
     return optimal
 
 def getIn(symbol, price, quantity, expirationDate, strike, type):
-    '''r.order_buy_option_limit("open", price, symbol, quantity, expirationDate, strike, optionType = type, timeInForce = 'gfd')'''
+    r.order_buy_option_limit("open", price, symbol, quantity, expirationDate, strike, optionType = type, timeInForce = 'gfd')
     print('\nBOUGHT')
     print('quantity: ' + str(quantity))
     print('symbol: ' + symbol)
@@ -24,7 +24,7 @@ def getIn(symbol, price, quantity, expirationDate, strike, type):
     return price * quantity
 
 def getOut(symbol, price, quantity, expirationDate, strike, type):
-    '''r.order_sell_option_limit("close", price, symbol, quantity, expirationDate, strike, optionType = type, timeInForce = 'gfd')'''
+    r.order_sell_option_limit("close", price, symbol, quantity, expirationDate, strike, optionType = type, timeInForce = 'gfd')
     print('SOLD')
     print('quantity: ' + str(quantity))
     print('symbol: ' + symbol)

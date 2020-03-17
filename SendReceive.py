@@ -4,8 +4,8 @@ import Trade
 import robin_stocks as r
 from twilio.twiml.messaging_response import MessagingResponse
 
-account_sid = "AC8e9b970324d70067800ef0ca54ae85e0"
-auth_token = "010b996fa537e0859cc07c512fbcd56c"
+account_sid = "ENTER SID"
+auth_token = "ENTER TOKEN"
 
 client = Client(account_sid, auth_token)
 
@@ -28,26 +28,11 @@ app = Flask(__name__)
 
 @app.route("/")
 def index():
-    return "lol"
+    return "Pog"
 
 @app.route("/receivesms", methods = ['GET', 'POST'])
 def ReceiveSms():
     incomingMessage = request.values.get('Body')
-    Jacob = "+14089921595"
-    Corey = "+15103756729"
-
-    '''client.messages.create(
-        to = Jacob,
-        from_= "+18163992829",
-        body = incomingMessage
-        )
-
-    client.messages.create(
-        to = Corey,
-        from_= "+18163992829",
-        body = incomingMessage
-        )'''
-
 
     tokens = incomingMessage.split()
     del tokens[0:4]
@@ -87,8 +72,6 @@ def ReceiveSms():
 
 def parse(wordList):
 
-    '''make this a dictionary with key as JAN/FEB/MAR and value as 01/02/03'''
-
     optionInfo = []
 
     for word in wordList:
@@ -111,21 +94,6 @@ def getExpirDate(symbol, contract):
         if month in date:
             return date
 
-'''def SendSms(incomingMessage):
-    Jacob = "+14089921595"
-    Corey = "+15103756729"
-
-    client.messages.create(
-        to = Jacob,
-        from_= "+18163992829",
-        body = incomingMessage
-        )
-
-    client.messages.create(
-        to = Corey,
-        from_= "+18163992829",
-        body = incomingMessage
-        )'''
 
 if __name__ == "__main__":
     app.run(debug=True)
