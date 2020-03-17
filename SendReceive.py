@@ -4,8 +4,8 @@ import Trade
 import robin_stocks as r
 from twilio.twiml.messaging_response import MessagingResponse
 
-account_sid = "AC8e9b970324d70067800ef0ca54ae85e0"
-auth_token = "010b996fa537e0859cc07c512fbcd56c"
+account_sid = "ENTER SID"
+auth_token = "ENTER TOKEN"
 
 client = Client(account_sid, auth_token)
 
