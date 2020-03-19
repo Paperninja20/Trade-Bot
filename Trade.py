@@ -3,7 +3,7 @@ import click
 import time
 import robin_stocks as r
 
-logged_in = r.authentication.login(username = Config.USERNAME, password = Config.PASSWORD, store_session = True)
+logged_in = r.login(username = Config.USERNAME, password = Config.PASSWORD, store_session = True)
 
 def OptimalContracts(bp, ask):
     optimal = int(bp/ask)
@@ -36,14 +36,23 @@ def getOut(symbol, price, quantity, expirationDate, strike, type):
     return price * quantity
 
 def bank(symbol, expirationDate, strike, optionType):
-    print(r.options.get_chains(symbol, info = 'expiration_dates'))
     bp = float(r.load_account_profile('buying_power'))
     ask = float(r.get_option_market_data(symbol, expirationDate, strike, optionType, info = "ask_price")) * 100
     bid = float(r.get_option_market_data(symbol, expirationDate, strike, optionType, info = "bid_price")) * 100
     quantity = OptimalContracts(bp, ask)
-    buy = getIn(symbol, ask, quantity, expirationDate, strike, optionType)
-    print('\n')
-    time.sleep(5)
-    sell = getOut(symbol, bid, quantity, expirationDate, strike, optionType)
-    print('\n')
-    print("profit: " + str(sell - buy))
+    if ask - bid > 30:
+        buy = getIn(symbol, bid, quantity, expirationDate, strike, optionType)
+        print('\n')
+        time.sleep(45)
+        sell = getOut(symbol, ask, quantity, expirationDate, strike, optionType)
+        print('\n')
+        print("PROFIT: " + str(sell - buy))
+        print('\n')
+    else:
+        buy = getIn(symbol, ask, quantity, expirationDate, strike, optionType)
+        print('\n')
+        time.sleep(45)
+        sell = getOut(symbol, bid, quantity, expirationDate, strike, optionType)
+        print('\n')
+        print("PROFIT: " + str(sell - buy))
+        print('\n')
