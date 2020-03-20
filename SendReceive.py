@@ -42,6 +42,8 @@ def ReceiveSms():
 
     if tokens[0] == 'New' and tokens[1][0] == 't':  #check if the stream alert is a play
         del tokens[0:5]                             #delete "New trade activity on stream:"
+        if tokens[0] == 'SOLD':                     #check for sell
+            exit()
         contract = parse(tokens)                    #search text for expiration date, strike price, and contract type
         ticker = 'NONE'                             #initialize ticker to NONE
 
@@ -109,7 +111,7 @@ def parse(wordList):
                 continue
             if word.upper() not in months:                              #if the word is not the expiration month, ignore it
                 continue
-        if word[0] == '+' or word[0] == '.' or word == '2quit':     #if the word has a number, check if it indicates how many contracts Josh got or what price he got it at, or if its 2quit. Ignore these if so
+        if word[0] == '+' or word[0] == '.' or word == '2quit' or '/' in word:     #if the word has a number, check if it indicates how many contracts Josh got or what price he got it at, or if its 2quit. Ignore these if so
             continue
         optionInfo.append(word)                                     #if the word passes all the filters, add it to the list
 

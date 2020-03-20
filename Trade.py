@@ -14,7 +14,7 @@ def OptimalContracts(bp, ask):
 
 #FUNCTION TO BUY
 def getIn(symbol, price, quantity, expirationDate, strike, type):
-    r.order_buy_option_limit("open", price, symbol, quantity, expirationDate, strike, optionType = type, timeInForce = 'gfd')   #buy the contracts
+    r.order_buy_option_limit('open', 'debit', price, symbol, quantity, expirationDate, strike, optionType = type, timeInForce = 'gfd')   #buy the contracts
     print('\nBOUGHT')
     print(str(quantity), end = ' ')
     print(expirationDate, end = ' ')
@@ -26,7 +26,7 @@ def getIn(symbol, price, quantity, expirationDate, strike, type):
 
 #FUNCTION TO SELL
 def getOut(symbol, price, quantity, expirationDate, strike, type):
-    r.order_sell_option_limit("close", price, symbol, quantity, expirationDate, strike, optionType = type, timeInForce = 'gfd') #sell the contracts
+    r.order_sell_option_limit('close', 'debit', price, symbol, quantity, expirationDate, strike, optionType = type, timeInForce = 'gfd') #sell the contracts
     print('SOLD')
     print(str(quantity), end = ' ')
     print(expirationDate, end = ' ')
