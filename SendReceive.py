@@ -40,6 +40,10 @@ def ReceiveSms():
     tokens = incomingMessage.split()                #split the text into a list of words
     del tokens[0:4]                                 #delete "Forwarded SMS of: STREAMALERTS"
 
+    for word in tokens:
+        if word[0] == '+':
+            tokens.remove(word)
+
     if tokens[0] == 'New' and tokens[1][0] == 't':  #check if the stream alert is a play
         del tokens[0:5]                             #delete "New trade activity on stream:"
         if tokens[0] == 'SOLD':                     #check for sell
@@ -68,7 +72,7 @@ def ReceiveSms():
                 if x == contract[1]:
                     if y.isupper() and not any(ch.isdigit() for ch in y) and y != 'TRADE':
                         ticker = y
-                if y == contract[1]:
+                if y == contract[0]:
                     if x.isupper() and not any(ch.isdigit() for ch in x) and x != 'TRADE':
                         ticker = x
 

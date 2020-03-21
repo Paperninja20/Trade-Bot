@@ -14,33 +14,33 @@ def OptimalContracts(bp, ask):
 
 #FUNCTION TO BUY
 def getIn(symbol, price, quantity, expirationDate, strike, type):
-    r.order_buy_option_limit('open', 'debit', price, symbol, quantity, expirationDate, strike, optionType = type, timeInForce = 'gfd')   #buy the contracts
+    print(r.order_buy_option_limit('open', price, symbol, quantity, expirationDate, strike, optionType = type, timeInForce = 'gfd'))   #buy the contracts
     print('\nBOUGHT')
     print(str(quantity), end = ' ')
     print(expirationDate, end = ' ')
     print(symbol, end = ' $')
     print(strike, end = ' ')
-    print(type, end = 's at ')
+    print(type, end = 's at $')
     print(str(price))
     return price * quantity
 
 #FUNCTION TO SELL
 def getOut(symbol, price, quantity, expirationDate, strike, type):
-    r.order_sell_option_limit('close', 'debit', price, symbol, quantity, expirationDate, strike, optionType = type, timeInForce = 'gfd') #sell the contracts
+    print(r.order_sell_option_limit('close', price, symbol, quantity, expirationDate, strike, optionType = type, timeInForce = 'gfd'))  #sell the contracts
     print('SOLD')
     print(str(quantity), end = ' ')
     print(expirationDate, end = ' ')
     print(symbol, end = ' $')
     print(strike, end = ' ')
-    print(type, end = 's at ')
+    print(type, end = 's at $')
     print(str(price))
     return price * quantity
 
 #MAIN FUNCTION
 def bank(symbol, expirationDate, strike, optionType):
     bp = float(r.load_account_profile('buying_power'))                                                              #get buying power
-    ask = float(r.get_option_market_data(symbol, expirationDate, strike, optionType, info = "ask_price")) * 100     #get the ask of the contract
-    bid = float(r.get_option_market_data(symbol, expirationDate, strike, optionType, info = "bid_price")) * 100     #get the bid of the contract
+    ask = int(float(r.get_option_market_data(symbol, expirationDate, strike, optionType, info = "ask_price")) * 100)     #get the ask of the contract
+    bid = int(float(r.get_option_market_data(symbol, expirationDate, strike, optionType, info = "bid_price")) * 100)     #get the bid of the contract
     quantity = OptimalContracts(bp, ask)                                                                            #calculate optimal amount of contracts
 
     if ask - bid > 30:                                                                  #protect against wide spreads
