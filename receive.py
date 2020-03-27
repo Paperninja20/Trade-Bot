@@ -1,9 +1,10 @@
 import trade
 import robin_stocks as r
+from datetime import datetime
 
 def receive_msg(incomingMessage: str):
     """
-    BOUGHT TO HEDGE OLD AAPL SHORT +20 May 15 AAPL $355C @ .80 NOT A RECOMENDATION DO NOT TRADE 
+    BOUGHT TO HEDGE OLD AAPL SHORT +20 May 15 AAPL $355C @ .80 NOT A RECOMENDATION DO NOT TRADE
     Rply STOP 2quit or HELP
     """
     tokens = incomingMessage.upper().split()        #split the text into a list of words
@@ -24,12 +25,14 @@ def receive_msg(incomingMessage: str):
             return 2
 
         ticker = result[0]
-        strike = result[1]
+        strike = float(result[1])
+        if strike > 150:
+            return 3
         expirDate = result[2]
         optionType = result[3]
-        
+
         trade.bank(ticker, expirDate, strike, optionType)     #call the main function with the parsed information
-        return 3
+        return 4
     else:                                           #does not begin with "New T..."
         return 0
 
@@ -39,7 +42,7 @@ def getContractInfo(wordList: list):
     FIND THE EXPIRATION DATE, STRIKE PRICE, AND CONTRACT TYPE
     """
     contractInfo = []                     #store the expiration date, strike price, and contract type
-    for word in wordList:                                       
+    for word in wordList:
         if not any(ch.isdigit() for ch in word):                    #if the word has no numbers
             if word in ['P', 'C']:          #if the word indicates the contract type, save the word to the list
                 contractInfo.append(word)
@@ -53,7 +56,7 @@ def getContractInfo(wordList: list):
 
 def getTickerAndStrike(contract: list, tokens: list):
     ticker = False                                      #initialize ticker to None
-    if contract[1][0] == '$':                           #May $355C 
+    if contract[1][0] == '$':                           #May $355C
         for x, y in zip(tokens[::], tokens[1::]):       #loop to find the ticker
             if x == contract[0]:
                 if not any(ch.isdigit() for ch in y) and y != 'TRADE':
@@ -81,7 +84,13 @@ def getTickerAndStrike(contract: list, tokens: list):
         if not ticker:            #if ticker was not found
             return False
 
-        expirDate = '2020-' + months[contract[0]] + '-' + contract[1]       #correctly format the expiration date
+        if int(months[contract[0]]) < 3:
+            expirDate = getExpirDate(ticker, contract)
+        else:
+            if len(contract[1]) == 1:
+                contract[1] = '0' + contract[1]
+            expirDate = '2020-' + months[contract[0]] + '-' + contract[1]       #correctly format the expiration date
+
         strike = contract[2]                                                        #set strike
         strikeIndex = 2                                                             #remember the index of the strike
 
@@ -100,7 +109,7 @@ def getTickerAndStrike(contract: list, tokens: list):
         elif contract[strikeIndex + 1] == 'P':
             optionType = 'put'
 
-    return (ticker, strike, expirDate, optionType) 
+    return (ticker, strike, expirDate, optionType)
 
 
 def getExpirDate(ticker, contract):
@@ -118,10 +127,14 @@ months = {
     'JAN': '01',
     'FEB': '02',
     'MAR': '03',
+    'MARCH': '03',
     'APR': '04',
+    'APRIL': '04',
     'MAY': '05',
     'JUN': '06',
+    'JUNE': '06',
     'JUL': '07',
+    'JULY':'07',
     'AUG': '08',
     'SEP': '09',
     'SEPT':'09',

@@ -10,7 +10,7 @@ def OptimalContracts(bp, ask):
 
 #FUNCTION TO BUY
 def getIn(symbol, price, quantity, expirationDate, strike, type):
-    print(r.order_buy_option_limit('open', price, symbol, quantity, expirationDate, strike, optionType = type, timeInForce = 'gfd'))   #buy the contracts
+    print(r.order_buy_option_limit('open', 'debit', price, symbol, quantity, expirationDate, strike, optionType = type, timeInForce = 'gfd'))   #buy the contracts
     print('\nBOUGHT')
     print(str(quantity), end = ' ')
     print(expirationDate, end = ' ')
@@ -22,7 +22,7 @@ def getIn(symbol, price, quantity, expirationDate, strike, type):
 
 #FUNCTION TO SELL
 def getOut(symbol, price, quantity, expirationDate, strike, type):
-    print(r.order_sell_option_limit('close', price, symbol, quantity, expirationDate, strike, optionType = type, timeInForce = 'gfd'))  #sell the contracts
+    print(r.order_sell_option_limit('close', 'debit', price, symbol, quantity, expirationDate, strike, optionType = type, timeInForce = 'gfd'))  #sell the contracts
     print('SOLD')
     print(str(quantity), end = ' ')
     print(expirationDate, end = ' ')
@@ -38,21 +38,30 @@ def bank(symbol, expirationDate, strike, optionType):
     ask = int(float(r.get_option_market_data(symbol, expirationDate, strike, optionType, info = "ask_price")) * 100)     #get the ask of the contract
     bid = int(float(r.get_option_market_data(symbol, expirationDate, strike, optionType, info = "bid_price")) * 100)     #get the bid of the contract
     market = int(float(r.get_option_market_data(symbol, expirationDate, strike, optionType, info = "adjusted_mark_price")) * 100)
-    quantity = OptimalContracts(bp, ask)                                                                            #calculate optimal amount of contracts
 
     if ask - bid > 30:                                                                  #protect against wide spreads
+        quantity = OptimalContracts(bp, market)                                                                            #calculate optimal amount of contracts
         buy = getIn(symbol, market, quantity, expirationDate, strike, optionType)
         print('')
         time.sleep(60)      #wait 45 seconds
+        r.cancel_all_open_orders()
         sell = getOut(symbol, ask, quantity, expirationDate, strike, optionType)
         print('')
-        print("Potential PROFIT: " + str(sell - buy))
+        if sell - buy >= 0:
+            print("Potential PROFIT: $" + str(sell - buy))
+        else:
+            print("Potential PROFIT: -$" + str(-1 * (sell - buy)))
         print('')
     else:
+        quantity = OptimalContracts(bp, ask)                                                                            #calculate optimal amount of contracts
         buy = getIn(symbol, ask, quantity, expirationDate, strike, optionType)
         print('')
         time.sleep(60)      #wait 45 seconds
+        r.cancel_all_open_orders()
         sell = getOut(symbol, market, quantity, expirationDate, strike, optionType)
         print('')
-        print("Potential PROFIT: " + str(sell - buy))
+        if sell - buy >= 0:
+            print("Potential PROFIT: $" + str(sell - buy))
+        else:
+            print("Potential PROFIT: -$" + str(-1 * (sell - buy)))
         print('')

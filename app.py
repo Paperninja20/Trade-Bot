@@ -35,6 +35,8 @@ def ReceiveSms():
     	print("Trade was a sell/close")
     elif res == 2:
     	print("Could not get ticker/strike")
+    elif res == 3:
+        print("Contracts too expensive, not worth a day trade!")
     else:
     	print("Trade succeeded!")
 
@@ -42,4 +44,3 @@ def ReceiveSms():
 
 if __name__ == "__main__":
 	main()
-	
