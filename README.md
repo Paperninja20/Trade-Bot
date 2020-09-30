@@ -1,2 +1,2 @@
-# ProjectPog
-Pog
+# Trade Bot
+
